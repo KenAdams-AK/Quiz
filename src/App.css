@@ -1,22 +1,26 @@
-.App h1 {
-  text-align: center;
-}
-.App .workouts-wrapper {
-  margin-left: 30px;
-}
-.App .workouts-wrapper .activity-wrapper {
-  display: flex;
-  align-items: center;
-}
-.App .workouts-wrapper .activity-wrapper button {
-  margin-left: 20px;
-}
-.App .workouts-wrapper .add {
-  display: flex;
-  align-items: flex-end;
-}
-.App .workouts-wrapper .add .input-section {
-  margin-right: 20px;
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
-/*# sourceMappingURL=App.css.map */
+body {
+	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+	line-height: 1.4;
+}
+
+.link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.home__button {
+	display: flex;
+	justify-content: center;
+	margin-top: 100px;
+}
+
+.main__container {
+	max-width: 80%;
+	margin: 0 auto;
+}

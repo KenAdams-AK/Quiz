@@ -1,15 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Provider } from 'react-redux';
 import './App.css';
-import Workouts from "./Components/Workouts";
+import Main from './components/Main';
+import store from './redux/store';
 
 function App() {
-  return (
-    <div className="App">
-      <h1>Work Tracker</h1>
-      <Workouts />
-    </div>
-  );
+	return (
+		<Provider store={store}>
+			<div className="App">
+				<Main />
+			</div>
+		</Provider>
+	);
 }
 
 export default App;
