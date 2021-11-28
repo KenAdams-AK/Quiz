@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
+import { setQuestionAnswers } from '../redux/quiz/quizActions';
 import { saveCurrentScoreData } from '../redux/scores/scoresActions';
 import './styles/QuizContainer.css';
 
@@ -13,12 +14,28 @@ function QuizeContainer() {
 	const currentUser = useSelector((state) => state.login.username);
 
 	const timerLast = 15;
+	const timerLineWidthDefault = 100;
 
 	const [isQuizFinished, setIsQuizFinished] = useState(false);
-	const [answers, setAnswers] = useState([]);
 	const [currentIndex, setCurrentIndex] = useState(0);
+	const [timerInterval, setTimerInterval] = useState(null);
 	const [currentTimer, setCurrentTimer] = useState(timerLast);
 	const [currentScore, setCurrentScore] = useState(0);
+
+	const [timerLineWidth, setTimerLineWidth] = useState(timerLineWidthDefault);
+	const [timerLineColor, setTimerLineColor] = useState('green');
+
+	const handleSwitchQuestion = () => {
+		setCurrentIndex((prevIndex) => prevIndex + 1);
+		setCurrentTimer(timerLast);
+		setTimerLineWidth(timerLineWidthDefault);
+		setTimerLineColor('green');
+	};
+
+	const handleFinishQuiz = () => {
+		setIsQuizFinished(true);
+		clearInterval(timerInterval);
+	};
 
 	useEffect(() => {
 		if (isQuizFinished) {
@@ -30,65 +47,68 @@ function QuizeContainer() {
 					isDisplayed: true,
 				})
 			);
-		}
-
-		console.log(currentScore);
-	}, [isQuizFinished]);
-
-	useEffect(() => {
-		if (isQuizFinished) {
 			history.push('/scores');
 		}
 	}, [isQuizFinished]);
 
 	useEffect(() => {
 		if (!isQuizFinished) {
-			setAnswers(
-				[
-					quiz?.quiz[currentIndex]?.correct_answer,
-					...quiz?.quiz[currentIndex]?.incorrect_answers,
-				].sort((a, b) => Math.random() - 0.5)
-			);
+			dispatch(setQuestionAnswers(currentIndex));
 		}
 	}, [currentIndex]);
 
 	useEffect(() => {
+		setTimerInterval(
+			setInterval(() => {
+				setCurrentTimer((prevTimer) => prevTimer - 1);
+				setTimerLineWidth((prevStyle) => prevStyle - 100 / 15);
+			}, 1000)
+		);
+		clearInterval(timerInterval);
+	}, []);
+
+	useEffect(() => {
 		if (currentTimer === -1) {
-			setCurrentIndex((prevIndex) => prevIndex + 1);
-			setCurrentTimer(timerLast);
+			handleSwitchQuestion();
 		}
+
 		if (currentTimer === 0 && currentIndex === quiz.quiz.length - 1) {
-			setIsQuizFinished(true);
+			handleFinishQuiz();
 		}
-
-		const intervalTimer = setInterval(() => {
-			setCurrentTimer((prevTimer) => prevTimer - 1);
-		}, 1000);
-
-		return () => clearInterval(intervalTimer);
 	}, [currentTimer]);
 
 	const handleClick = (e) => {
-		setCurrentIndex((prevIndex) => prevIndex + 1);
-		setCurrentTimer(timerLast);
+		handleSwitchQuestion();
 
 		if (e.target.value === quiz?.quiz[currentIndex]?.correct_answer) {
 			setCurrentScore(currentScore + currentTimer * 100);
 		}
 
 		if (currentIndex === quiz.quiz.length - 1) {
-			setIsQuizFinished(true);
+			handleFinishQuiz();
 
 			console.log('lastclick', currentScore);
 		}
 	};
+
+	useEffect(() => {
+		if (currentTimer === 4) {
+			setTimerLineColor('red');
+		}
+	}, [currentTimer]);
 
 	return (
 		<div className="quiz__container">
 			<div className="quiz__score">Score: {currentScore}</div>
 			<div className="quiz__card-container">
 				<div className="quiz__timer-container">
-					<div className="quiz__timer-line"></div>
+					<div
+						className="quiz__timer-line"
+						style={{
+							width: `${timerLineWidth}%`,
+							background: `${timerLineColor}`,
+						}}
+					></div>
 					<div className="quiz__timer-countdown">{currentTimer}</div>
 				</div>
 
@@ -108,7 +128,7 @@ function QuizeContainer() {
 									<h4>{element.question}</h4>
 								</div>
 								<div className="quiz__card-answers">
-									{answers.map((answer) => (
+									{quiz.answers.map((answer) => (
 										<Button
 											className="quiz__card-answer"
 											onClick={handleClick}

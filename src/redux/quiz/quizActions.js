@@ -3,6 +3,7 @@ import {
 	GET_QUIZ_DATA_FAILURE,
 	GET_QUIZ_DATA_REQUEST,
 	GET_QUIZ_DATA_SUCCESS,
+	SET_QUESTION_ANSWERS,
 	SET_QUIZ_DATA,
 } from './quizTypes';
 
@@ -30,6 +31,13 @@ export const setQuizData = (data) => {
 	return {
 		type: SET_QUIZ_DATA,
 		payload: data,
+	};
+};
+
+export const setQuestionAnswers = (currentIndex) => {
+	return {
+		type: SET_QUESTION_ANSWERS,
+		payload: currentIndex,
 	};
 };
 

@@ -2,12 +2,14 @@ import {
 	GET_QUIZ_DATA_FAILURE,
 	GET_QUIZ_DATA_REQUEST,
 	GET_QUIZ_DATA_SUCCESS,
+	SET_QUESTION_ANSWERS,
 	SET_QUIZ_DATA,
 } from './quizTypes';
 
 const initialState = {
 	loading: false,
 	quiz: [],
+	answers: [],
 	error: null,
 };
 
@@ -23,6 +25,7 @@ const quizReducer = (state = initialState, action) => {
 				'quizData',
 				JSON.stringify({ data: action.payload })
 			);
+
 			return {
 				...state,
 				loading: false,
@@ -40,6 +43,17 @@ const quizReducer = (state = initialState, action) => {
 			return {
 				...state,
 				quiz: action.payload,
+			};
+
+		case SET_QUESTION_ANSWERS:
+			const randomOrderAnswers = [
+				state?.quiz[action.payload]?.correct_answer,
+				...state?.quiz[action.payload]?.incorrect_answers,
+			].sort((a, b) => Math.random() - 0.5);
+
+			return {
+				...state,
+				answers: randomOrderAnswers,
 			};
 
 		default:
