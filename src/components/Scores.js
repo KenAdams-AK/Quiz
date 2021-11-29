@@ -156,7 +156,7 @@ function Scores() {
 				)}
 				<div className="scores__logout">
 					<Button onClick={() => setShowAllResults(true)} variant="contained">
-						All relults >>
+						All relults &gt;&gt;
 					</Button>
 				</div>
 			</div>

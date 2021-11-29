@@ -68,7 +68,7 @@
 	margin-bottom: 3px;
 	border-radius: 10px;
 	margin-bottom: 10px;
-	transition: ease-in-out 1.01s;
+	transition: linear 1.01s;
 }
 
 .quiz__timer-countdown {

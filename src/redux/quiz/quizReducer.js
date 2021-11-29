@@ -46,10 +46,16 @@ const quizReducer = (state = initialState, action) => {
 			};
 
 		case SET_QUESTION_ANSWERS:
-			const randomOrderAnswers = [
-				state?.quiz[action.payload]?.correct_answer,
-				...state?.quiz[action.payload]?.incorrect_answers,
-			].sort((a, b) => Math.random() - 0.5);
+			let randomOrderAnswers;
+
+			if (!state.quiz[action.payload]) {
+				return state;
+			} else {
+				randomOrderAnswers = [
+					state?.quiz[action.payload]?.correct_answer,
+					...state?.quiz[action.payload]?.incorrect_answers,
+				].sort((a, b) => Math.random() - 0.5);
+			}
 
 			return {
 				...state,
