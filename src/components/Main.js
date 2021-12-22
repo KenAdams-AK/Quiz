@@ -1,6 +1,12 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import {
+	BrowserRouter,
+	Switch,
+	Route,
+	Redirect,
+	HashRouter,
+} from 'react-router-dom';
 import { handleLogin } from '../redux/login/loginActions';
 import Login from './Login';
 import Home from './Home';
@@ -53,7 +59,7 @@ function Main() {
 	);
 
 	return (
-		<BrowserRouter>
+		<HashRouter>
 			<div className="main__container">
 				<Switch>
 					<PrivateRoute exact path="/" component={Home} />
@@ -62,7 +68,7 @@ function Main() {
 					<Redirect from="*" to="/" />
 				</Switch>
 			</div>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
 
